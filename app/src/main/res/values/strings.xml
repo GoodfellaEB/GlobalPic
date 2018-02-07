@@ -2,4 +2,15 @@
     <string name="app_name">Epicture</string>
     <string name="background_description">starry sky</string>
     <string name="login_button_string" tools:ignore="ButtonCase">Login to Imgur</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_add">Add</string>
+    <string name="title_select">Select</string>
+    <string name="title_activity_consult">ConsultActivity</string>
+    <string name="image_title">Title</string>
+    <string name="image_tags">Tags</string>
+    <string name="images_description">Description</string>
+    <string name="submit_button">Submit</string>
+    <string name="add_favorites">Add to Favorites?</string>
 </resources>
