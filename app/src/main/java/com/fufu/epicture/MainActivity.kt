@@ -15,17 +15,22 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import okhttp3.Response
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(),
         AuthorizationTokenReceivedListener, RequestHandler {
 
+
     private lateinit var imgurRequests : ImgurRequests
+    private lateinit var timer : Timer
 
     companion object {
         private const val LOGIN_TAG : String = "login_frag"
         private const val HOME_TAG : String = "home_frag"
         private const val SHARED_PREF_ACCESS_TOKEN = "accessToken"
+
+        private const val TIME_LAPSE : Long = 5 * 1000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +40,8 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.core_layout)
         setBottomNavigationViewVisibility(View.GONE)
         tryImgurConnection()
+        timer = Timer()
+        timer.scheduleAtFixedRate(TokenRefresher(this), 0, TIME_LAPSE)
     }
 
     private fun tryImgurConnection() {
@@ -168,6 +175,22 @@ class MainActivity : AppCompatActivity(),
 
     fun goToAdd(menuItem: MenuItem) {
         Log.d("DEBUG", "goToAdd")
+    }
+
+    private class TokenRefresher(mainActivity: MainActivity) : TimerTask() {
+
+        private val master = mainActivity
+
+        override fun run() {
+            master.runOnUiThread({ master.refreshTokenIfNeeded() })
+        }
+    }
+
+    fun refreshTokenIfNeeded() {
+        val accessToken : AccessToken? = extractAccessToken()
+        
+        if (accessToken != null && accessToken.isExpired())
+            imgurRequests.refreshToken(accessToken)
     }
 
     /*

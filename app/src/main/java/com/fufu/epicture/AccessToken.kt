@@ -10,6 +10,10 @@ import java.util.*
  */
 class AccessToken (fragment: String) {
 
+    companion object {
+        private const val TIME_MARGIN = 10
+    }
+
     private var accessToken : String
     private var tokenType : String
     private var expiresIn : String
@@ -39,7 +43,7 @@ class AccessToken (fragment: String) {
     }
 
     fun isExpired() : Boolean {
-        val limitDate : Long = creationDate.time + expiresIn.toLong()
+        val limitDate : Long = creationDate.time + (expiresIn.toLong() - TIME_MARGIN)
 
         return (Date(limitDate).before(Date()))
     }
