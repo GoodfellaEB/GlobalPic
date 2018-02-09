@@ -13,4 +13,5 @@
     <string name="images_description">Description</string>
     <string name="submit_button">Submit</string>
     <string name="add_favorites">Add to Favorites?</string>
+    <string name="default_tag_letter">P</string>
 </resources>

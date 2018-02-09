@@ -89,7 +89,6 @@ class LoginFragment : Fragment() {
             if (request != null) {
                 val requestUri : Uri = request.url
 
-                Log.d("DEBUG", "request : " + requestUri.toString())
                 if (isRedirectRequest(requestUri)) {
                     Log.d("DEBUG", "Redirect request")
                     handleRedirectRequest(view, requestUri)

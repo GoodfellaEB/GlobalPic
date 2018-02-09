@@ -1,6 +1,8 @@
 package com.fufu.epicture
 
 import android.net.Uri
+import android.util.Log
+import com.google.gson.JsonObject
 import java.util.*
 
 /**
@@ -8,20 +10,32 @@ import java.util.*
  */
 class AccessToken (fragment: String) {
 
-    private val accessToken : String
-    private val tokenType : String
-    private val expiresIn : String
-    private val refreshToken : String
+    private var accessToken : String
+    private var tokenType : String
+    private var expiresIn : String
+    private var refreshToken : String
     private val creationDate : Date
 
     init {
         val fragmentQuery : Uri = Uri.parse("?" + fragment)
+        var parameter : String?
 
-        accessToken = fragmentQuery.getQueryParameter("access_token")
-        tokenType = fragmentQuery.getQueryParameter("token_type")
-        expiresIn = fragmentQuery.getQueryParameter("expires_in")
-        refreshToken = fragmentQuery.getQueryParameter("refresh_token")
+        parameter = fragmentQuery.getQueryParameter("access_token")
+        accessToken = if (parameter != null) parameter else ""
+        parameter = fragmentQuery.getQueryParameter("token_type")
+        tokenType = if (parameter != null) parameter else ""
+        parameter = fragmentQuery.getQueryParameter("expires_in")
+        expiresIn = if (parameter != null) parameter else ""
+        parameter = fragmentQuery.getQueryParameter("refresh_token")
+        refreshToken = if (parameter != null) parameter else ""
         creationDate = Date()
+    }
+
+    fun parseJsonObject(jsonObject: JsonObject) {
+        accessToken = jsonObject.get("access_token").asString
+        tokenType = jsonObject.get("token_type").asString
+        expiresIn = jsonObject.get("expires_in").asString
+        refreshToken = jsonObject.get("refresh_token").asString
     }
 
     fun isExpired() : Boolean {
@@ -36,5 +50,9 @@ class AccessToken (fragment: String) {
 
     fun getTokenType() : String {
         return (tokenType)
+    }
+
+    fun getRefreshToken() : String {
+        return (refreshToken)
     }
 }

@@ -4,17 +4,20 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+        android:title="@string/title_home"
+        android:onClick="goToHome"/>
 
     <item
         android:id="@+id/navigation_favorites"
         android:icon="@drawable/ic_favorite_black_24dp"
-        android:title="@string/title_favorites" />
+        android:title="@string/title_favorites"
+        android:onClick="goToFavorites"/>
 
     <item
         android:id="@+id/navigation_add"
         android:icon="@drawable/ic_add_box_black_24dp"
-        android:title="@string/title_add" />
+        android:title="@string/title_add"
+        android:onClick="goToAdd"/>
 
 
 </menu>
