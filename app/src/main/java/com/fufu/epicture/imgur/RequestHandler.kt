@@ -1,4 +1,4 @@
-package com.fufu.epicture
+package com.fufu.epicture.imgur
 
 import okhttp3.Response
 

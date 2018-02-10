@@ -1,4 +1,4 @@
-package com.fufu.epicture
+package com.fufu.epicture.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -13,7 +13,10 @@ import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
-
+import com.fufu.epicture.listeners.AuthorizationTokenReceivedListener
+import com.fufu.epicture.imgur.AccessToken
+import com.fufu.epicture.imgur.ImgurAppData
+import com.fufu.epicture.R
 
 
 /**
@@ -22,21 +25,20 @@ import android.webkit.WebViewClient
 class LoginFragment : Fragment() {
 
     private lateinit var tokenListener : AuthorizationTokenReceivedListener
-    private lateinit var loginWebView : WebView
+    private var loginWebView : WebView? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("DEBUG", "onCreateView")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return (inflater?.inflate(R.layout.login_page, container, false))
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        loginWebView = activity.findViewById(R.id.imgur_webview)
+        loginWebView = activity?.findViewById(R.id.imgur_webview)
 
-        loginWebView.settings.javaScriptEnabled = true
-        loginWebView.webViewClient = LoginWebClient(this)
-        loginWebView.loadUrl(getAuthenticateUrl())
+        loginWebView?.settings?.javaScriptEnabled = true
+        loginWebView?.webViewClient = LoginWebClient(this)
+        loginWebView?.loadUrl(getAuthenticateUrl())
     }
 
     override fun onAttach(context: Context?) {
@@ -51,14 +53,14 @@ class LoginFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         clearWebView()
-        loginWebView.destroy()
+        loginWebView?.destroy()
 
         Log.d("DEBUG", "onDetach")
     }
 
     private fun clearWebView() {
-        loginWebView.clearCache(true)
-        loginWebView.clearHistory()
+        loginWebView?.clearCache(true)
+        loginWebView?.clearHistory()
         CookieManager.getInstance().removeAllCookies(null)
         CookieManager.getInstance().flush()
     }
@@ -103,7 +105,8 @@ class LoginFragment : Fragment() {
             val uriWithoutFragment : Uri = uri.buildUpon().fragment("").build()
             val fragment : String = uri.fragment
 
-            return (uriWithoutFragment.toString().equals(ImgurAppData.REDIRECT_URI)
+            Log.d("DEBUG", "redirect : " + uriWithoutFragment.toString() + " / " + ImgurAppData.REDIRECT_URI)
+            return (uriWithoutFragment.toString() == ImgurAppData.REDIRECT_URI
                     && TextUtils.isEmpty(fragment).not())
         }
 

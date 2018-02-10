@@ -1,8 +1,9 @@
-package com.fufu.epicture
+package com.fufu.epicture.imgur
 
-import android.app.Fragment
 import android.net.Uri
+import android.support.v4.app.Fragment
 import android.util.Log
+import com.fufu.epicture.MainActivity
 import com.google.gson.JsonObject
 import okhttp3.*
 import java.io.IOException
@@ -60,6 +61,7 @@ class ImgurRequests(handler: RequestHandler) {
     }
 
     fun accountImages(accessToken: AccessToken) {
+        Log.d("DEBUG", "ACCOUNT_IMAGES")
         val uriBuilder = getBaseUri()
         val headers : ArrayList<Pair<String, String>> = ArrayList()
         val dataRequest = DataRequest()
@@ -103,6 +105,7 @@ class ImgurRequests(handler: RequestHandler) {
         val builder : okhttp3.Request.Builder = okhttp3.Request.Builder().url(dataRequest.url)
         val headers = dataRequest.headers
 
+        Log.d("DEBUG", "url : " + dataRequest.url)
         if (headers != null) {
             for (header in headers) {
                 builder.addHeader(header.first, header.second)
@@ -126,6 +129,7 @@ class ImgurRequests(handler: RequestHandler) {
                 RequestHandler.Type.TOKEN_REFRESH -> _handler.onRefreshTokenResponse(response)
                 RequestHandler.Type.ACCOUNT_IMAGES -> _handler.onAccountImagesResponse(response)
             }
-        }
+        } else
+            Log.d("DEBUG", "code : " + response?.code())
     }
 }

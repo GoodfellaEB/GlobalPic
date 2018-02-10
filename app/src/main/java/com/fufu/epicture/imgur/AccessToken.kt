@@ -1,7 +1,6 @@
-package com.fufu.epicture
+package com.fufu.epicture.imgur
 
 import android.net.Uri
-import android.util.Log
 import com.google.gson.JsonObject
 import java.util.*
 

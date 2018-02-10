@@ -1,12 +1,13 @@
-package com.fufu.epicture
+package com.fufu.epicture.display
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import com.bumptech.glide.Glide
+import com.fufu.epicture.R
 
 /**
  * Created by weryp on 2/8/18.
@@ -31,7 +32,9 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
 
         val imageButton : ImageButton? = view?.findViewById(R.id.imageButton)
 
-        imageButton?.setImageBitmap(epictureImage.bitmap)
+        if (view != null && imageButton != null)
+            Glide.with(view).load(epictureImage.getLink()).into(imageButton)
+
         return (view as View)
     }
 }
