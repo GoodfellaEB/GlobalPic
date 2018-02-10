@@ -8,9 +8,11 @@ import okhttp3.Response
 interface RequestHandler {
     enum class Type {
         TOKEN_REFRESH,
-        ACCOUNT_IMAGES
+        ACCOUNT_IMAGES,
+        IMAGE_UPLOAD
     }
 
     fun onRefreshTokenResponse(response: Response)
     fun onAccountImagesResponse(response: Response)
+    fun onImageUploadResponse(response: Response)
 }

@@ -1,7 +1,9 @@
 package com.fufu.epicture.imgur
 
 import android.net.Uri
+import android.os.AsyncTask
 import android.support.v4.app.Fragment
+import android.util.Base64
 import android.util.Log
 import com.fufu.epicture.MainActivity
 import com.google.gson.JsonObject
@@ -26,6 +28,7 @@ class ImgurRequests(handler: RequestHandler) {
 
         private const val REFRESH_TOKEN : String = "oauth2/token"
         private const val ACCOUNT_IMAGES : String = "3/account/me/images"
+        private const val IMAGE_UPLOAD : String = "3/image"
     }
 
     private val queueRequest : Queue<DataRequest> = LinkedList<DataRequest>()
@@ -40,28 +43,25 @@ class ImgurRequests(handler: RequestHandler) {
         var url : String = ""
         var requestType : RequestType = RequestType.GET
         var headers : ArrayList<Pair<String, String>>? = null
-        var body : String = "{}"
+        var body : JsonObject = JsonObject()
     }
 
     fun refreshToken(accessToken: AccessToken) {
         val uriBuilder = getBaseUri()
-        val body = JsonObject()
         val dataRequest = DataRequest()
 
         uriBuilder.appendPath(REFRESH_TOKEN)
-        body.addProperty("refresh_token", accessToken.getRefreshToken())
-        body.addProperty("client_id", ImgurAppData.CLIENT_ID)
-        body.addProperty("client_secret", ImgurAppData.CLIENT_SECRET)
-        body.addProperty("grant_type", "refresh_token")
+        dataRequest.body.addProperty("refresh_token", accessToken.getRefreshToken())
+        dataRequest.body.addProperty("client_id", ImgurAppData.CLIENT_ID)
+        dataRequest.body.addProperty("client_secret", ImgurAppData.CLIENT_SECRET)
+        dataRequest.body.addProperty("grant_type", "refresh_token")
         dataRequest.request = RequestHandler.Type.TOKEN_REFRESH
         dataRequest.requestType = RequestType.POST
         dataRequest.url = uriBuilder.build().toString()
-        dataRequest.body = body.toString()
         sendRequest(dataRequest)
     }
 
     fun accountImages(accessToken: AccessToken) {
-        Log.d("DEBUG", "ACCOUNT_IMAGES")
         val uriBuilder = getBaseUri()
         val headers : ArrayList<Pair<String, String>> = ArrayList()
         val dataRequest = DataRequest()
@@ -72,6 +72,43 @@ class ImgurRequests(handler: RequestHandler) {
         dataRequest.url = uriBuilder.build().toString()
         dataRequest.headers = headers
         sendRequest(dataRequest)
+    }
+
+    fun imageUpload(bytes : ByteArray, imageTitle: String,
+                    imageDescription: String, accessToken: AccessToken) {
+        val uriBuilder = getBaseUri()
+        val headers : ArrayList<Pair<String, String>> = ArrayList()
+        val dataRequest = DataRequest()
+
+        uriBuilder.appendPath(IMAGE_UPLOAD)
+        headers.add(Pair("Authorization", "Bearer " + accessToken.getAccessToken()))
+        dataRequest.body.addProperty("title", imageTitle)
+        dataRequest.body.addProperty("description", imageDescription)
+        dataRequest.request = RequestHandler.Type.IMAGE_UPLOAD
+        dataRequest.requestType = RequestType.POST
+        dataRequest.url = uriBuilder.build().toString()
+        dataRequest.headers = headers
+        ImageUploader(this, dataRequest).execute(bytes)
+    }
+
+    private class ImageUploader(parent : ImgurRequests, dataRequest: DataRequest)
+        : AsyncTask<ByteArray, Void, String>() {
+
+        private val _parent = parent
+        private val _dataRequest = dataRequest
+
+        override fun doInBackground(vararg params: ByteArray?): String {
+            var result = ""
+
+            if (params[0] != null)
+                result = Base64.encodeToString(params[0], Base64.DEFAULT)
+            return (result)
+        }
+
+        override fun onPostExecute(result: String?) {
+            _dataRequest.body.addProperty("image", result)
+            _parent.sendRequest(_dataRequest)
+        }
     }
 
     private fun getBaseUri() : Uri.Builder {
@@ -113,7 +150,7 @@ class ImgurRequests(handler: RequestHandler) {
         }
         if (dataRequest.requestType == RequestType.POST) {
             val jsonEncode = MediaType.parse("application/json; charset=utf-8")
-            val jsonContent = dataRequest.body
+            val jsonContent = dataRequest.body.toString()
 
             builder.post(RequestBody.create(jsonEncode, jsonContent))
         }
@@ -123,13 +160,15 @@ class ImgurRequests(handler: RequestHandler) {
     private fun sendResponse(response: Response?) {
         val dataRequest : DataRequest = queueRequest.remove()
 
+
         if (response?.code() == 200) {
             Log.d("DEBUG", "valid response")
             when (dataRequest.request) {
                 RequestHandler.Type.TOKEN_REFRESH -> _handler.onRefreshTokenResponse(response)
                 RequestHandler.Type.ACCOUNT_IMAGES -> _handler.onAccountImagesResponse(response)
+                RequestHandler.Type.IMAGE_UPLOAD -> _handler.onImageUploadResponse(response)
             }
         } else
-            Log.d("DEBUG", "code : " + response?.code())
+            Log.d("DEBUG", "body : " + response?.body()?.string())
     }
 }

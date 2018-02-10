@@ -22,6 +22,7 @@ import com.google.gson.JsonSyntaxException
 import okhttp3.Response
 import java.util.*
 import com.fufu.epicture.fragments.AddFragment
+import com.fufu.epicture.fragments.LoginFragment
 
 
 class MainActivity : AppCompatActivity(),
@@ -53,7 +54,6 @@ class MainActivity : AppCompatActivity(),
         imgurRequests = ImgurRequests(this)
         setContentView(R.layout.core_layout)
         setBottomNavigationViewVisibility(View.GONE)
-        logout()
         tryImgurConnection()
         timer = Timer()
         timer.scheduleAtFixedRate(TokenRefresher(this), 0, TIME_LAPSE)
@@ -269,12 +269,17 @@ class MainActivity : AppCompatActivity(),
             jsonObject = jsonTree.asJsonObject
             accessToken.parseJsonObject(jsonObject)
             storeAccessToken(accessToken)
+            reloadFrames()
         } else {
             Log.d("DEBUG", "json format error -> object expected")
         }
     }
 
     override fun onAccountImagesResponse(response: Response) {
+
+    }
+
+    override fun onImageUploadResponse(response: Response) {
 
     }
 }

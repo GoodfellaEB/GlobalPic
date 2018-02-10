@@ -15,4 +15,8 @@
     <string name="add_favorites">Add to Favorites ?</string>
     <string name="default_tag_letter">P</string>
     <string name="add_details_placeholder">Description</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="toast_image_uploaded">Image Uploaded</string>
+    <string name="toast_image_submit">Image submitted</string>
+    <string name="toast_no_selected_image">Please select an image</string>
 </resources>

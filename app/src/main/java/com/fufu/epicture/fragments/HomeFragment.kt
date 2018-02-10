@@ -88,6 +88,10 @@ class HomeFragment : Fragment(), ImageLoadListener, RequestHandler {
             Log.d("DEBUG", "json format error -> object expected")
     }
 
+    override fun onImageUploadResponse(response: Response) {
+
+    }
+
     private fun parseAccountImagesData(jsonArray: JsonArray) {
         var imageId : JsonElement?
         var imageUrl : JsonElement?
@@ -104,8 +108,11 @@ class HomeFragment : Fragment(), ImageLoadListener, RequestHandler {
                 imageDescription = imageObject.asJsonObject.get("description")
                 title = if (imageTitle.isJsonNull) "" else imageTitle?.asString
                 description = if (imageTitle.isJsonNull) "" else imageDescription?.asString
-                if (isNewImage(imageId, imageUrl))
-                    adapter.add(EpictureImage(imageId.asString, imageUrl.asString, title, description))
+                if (isNewImage(imageId, imageUrl)) {
+                    adapter.add(EpictureImage(imageId.asString, imageUrl.asString,
+                            title, description))
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
     }

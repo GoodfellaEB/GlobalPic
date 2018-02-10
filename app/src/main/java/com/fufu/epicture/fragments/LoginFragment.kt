@@ -1,4 +1,4 @@
-package com.fufu.epicture
+package com.fufu.epicture.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -13,6 +13,7 @@ import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
+import com.fufu.epicture.R
 import com.fufu.epicture.listeners.AuthorizationTokenReceivedListener
 import com.fufu.epicture.imgur.AccessToken
 import com.fufu.epicture.imgur.ImgurAppData
@@ -27,7 +28,7 @@ class LoginFragment : Fragment() {
     private var loginWebView : WebView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return (inflater?.inflate(R.layout.login_page, container, false))
+        return (inflater.inflate(R.layout.login_page, container, false))
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
