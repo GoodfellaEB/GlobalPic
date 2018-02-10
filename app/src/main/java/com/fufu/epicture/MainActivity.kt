@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import com.fufu.epicture.fragments.HomeFragment
-import com.fufu.epicture.fragments.LoginFragment
 import com.fufu.epicture.imgur.AccessToken
 import com.fufu.epicture.imgur.ImgurRequests
 import com.fufu.epicture.imgur.RequestHandler

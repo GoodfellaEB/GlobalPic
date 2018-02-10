@@ -1,4 +1,4 @@
-package com.fufu.epicture.fragments
+package com.fufu.epicture
 
 import android.content.Context
 import android.os.Bundle
@@ -16,7 +16,6 @@ import android.webkit.WebViewClient
 import com.fufu.epicture.listeners.AuthorizationTokenReceivedListener
 import com.fufu.epicture.imgur.AccessToken
 import com.fufu.epicture.imgur.ImgurAppData
-import com.fufu.epicture.R
 
 
 /**
@@ -32,6 +31,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        Log.d("DEBUG", "LoginFragment, onActivityCreated")
         super.onActivityCreated(savedInstanceState)
 
         loginWebView = activity?.findViewById(R.id.imgur_webview)
@@ -99,6 +99,21 @@ class LoginFragment : Fragment() {
                 }
             }
             return (super.shouldOverrideUrlLoading(view, request))
+        }
+
+        @Suppress("OverridingDeprecatedMember", "DEPRECATION")
+        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+            if (url != null) {
+                val requestUri : Uri = Uri.parse(url)
+
+                if (isRedirectRequest(requestUri)) {
+                    Log.d("DEBUG", "Redirect request")
+                    handleRedirectRequest(view, requestUri)
+                } else {
+                    Log.d("DEBUG", "No Redirect request")
+                }
+            }
+            return super.shouldOverrideUrlLoading(view, url)
         }
 
         private fun isRedirectRequest(uri: Uri) : Boolean {
