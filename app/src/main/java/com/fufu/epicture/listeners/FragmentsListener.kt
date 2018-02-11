@@ -9,5 +9,6 @@ interface FragmentsListener {
 
     fun onAuthorizationTokenReceived(accessToken: AccessToken)
     fun onImageUploaded()
+    fun onLogout()
 
 }

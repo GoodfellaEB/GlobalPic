@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.fufu.epicture.R
@@ -59,6 +57,28 @@ class AddFragment : Fragment(), RequestHandler {
 
         if (context != null)
             dbHandler = FavoritesDBHandler(context, ImgurAppData.DB_NAME)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.only_logout, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.logout) {
+            if (activity is FragmentsListener)
+                (activity as FragmentsListener).onLogout()
+        }
+
+        return when (item?.itemId) {
+            R.id.logout -> true
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

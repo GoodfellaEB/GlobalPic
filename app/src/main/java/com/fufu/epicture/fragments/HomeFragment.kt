@@ -6,7 +6,6 @@ import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.fufu.epicture.*
 import com.fufu.epicture.dataBase.FavoritesDBHandler
@@ -16,10 +15,10 @@ import com.fufu.epicture.imgur.AccessToken
 import com.fufu.epicture.imgur.ImgurAppData
 import com.fufu.epicture.imgur.ImgurRequests
 import com.fufu.epicture.imgur.RequestHandler
+import com.fufu.epicture.listeners.FragmentsListener
 import com.fufu.epicture.listeners.ImageLoadListener
 import com.google.gson.*
 import okhttp3.Response
-import org.w3c.dom.Text
 
 /**
  * Created by weryp on 2/8/18.
@@ -69,9 +68,23 @@ class HomeFragment : Fragment(), ImageLoadListener,
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.options_menu, menu)
-        searchView = menu?.findItem(R.id.search)?.actionView as SearchView
-        searchView.setOnQueryTextListener(this)
+        if (menu != null) {
+            searchView = menu.findItem(R.id.search)?.actionView as SearchView
+            searchView.setOnQueryTextListener(this)
+        }
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.logout) {
+            if (activity is FragmentsListener)
+                (activity as FragmentsListener).onLogout()
+        }
+
+        return when (item?.itemId) {
+            R.id.logout -> true
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

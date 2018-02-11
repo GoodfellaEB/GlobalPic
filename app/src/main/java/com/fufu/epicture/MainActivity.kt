@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.text.TextUtils
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.fufu.epicture.fragments.HomeFragment
@@ -117,6 +116,10 @@ class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {
             stateReloadFrames[Frame.FAVORITES.pos] = true
         if (currentFrame != Frame.ADD)
             reloadFrame()
+    }
+
+    override fun onLogout() {
+        logout()
     }
 
     private fun swapFragment(containerViewId: Int, fragment: Fragment, tag: String? = null) {
@@ -245,7 +248,7 @@ class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {
     private fun goToFavoritesFragment(accessToken: AccessToken, new: Boolean) {
         val fragment : Fragment? = supportFragmentManager.findFragmentByTag(FragmentsTAG.FAVORITES_TAG.tag)
 
-        currentFrame = Frame.ADD
+        currentFrame = Frame.FAVORITES
         setBottomNavigationViewVisibility(View.VISIBLE)
         if (fragment == null || new)
             swapFragment(R.id.core_container, getFavoritesFragment(accessToken), FragmentsTAG.FAVORITES_TAG.tag)
