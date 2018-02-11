@@ -14,7 +14,6 @@ import com.fufu.epicture.fragments.HomeFragment
 import com.fufu.epicture.imgur.AccessToken
 import com.fufu.epicture.imgur.ImgurRequests
 import com.fufu.epicture.imgur.RequestHandler
-import com.fufu.epicture.listeners.AuthorizationTokenReceivedListener
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -22,27 +21,33 @@ import com.google.gson.JsonSyntaxException
 import okhttp3.Response
 import java.util.*
 import com.fufu.epicture.fragments.AddFragment
+import com.fufu.epicture.fragments.FragmentType
 import com.fufu.epicture.fragments.LoginFragment
+import com.fufu.epicture.listeners.FragmentsListener
 
 
-class MainActivity : AppCompatActivity(),
-        AuthorizationTokenReceivedListener, RequestHandler {
+class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {
 
-    enum class Frame {
-        LOGIN,
-        HOME,
-        FAVORITES,
-        ADD
+    enum class Frame(val pos: Int) {
+        LOGIN(0),
+        HOME(1),
+        FAVORITES(2),
+        ADD(3)
     }
 
     private lateinit var imgurRequests : ImgurRequests
     private lateinit var timer : Timer
+    private val stateReloadFrames : BooleanArray = kotlin.BooleanArray(Frame.values().size)
     private var currentFrame : Frame = Frame.LOGIN
 
+    enum class FragmentsTAG(val tag: String) {
+        LOGIN_TAG("login_frag"),
+        HOME_TAG("home_frag"),
+        FAVORITES_TAG("favorites_frag"),
+        ADD_TAG("add_frag")
+    }
+
     companion object {
-        private const val LOGIN_TAG : String = "login_frag"
-        private const val HOME_TAG : String = "home_frag"
-        private const val ADD_TAG : String = "add_frag"
         private const val SHARED_PREF_ACCESS_TOKEN = "accessToken"
 
         private const val TIME_LAPSE : Long = 5 * 1000
@@ -66,7 +71,7 @@ class MainActivity : AppCompatActivity(),
             if (accessToken.isExpired())
                 imgurRequests.refreshToken(accessToken)
             else
-                goToHomeFragment(accessToken)
+                goToHomeFragment(accessToken, true)
         }
     }
 
@@ -83,11 +88,11 @@ class MainActivity : AppCompatActivity(),
     fun onTryLogin(view: View) {
         Log.d("DEBUG", "onTryLogin")
 
-        swapFragment(R.id.core_container, LoginFragment(), LOGIN_TAG)
+        swapFragment(R.id.core_container, LoginFragment(), FragmentsTAG.LOGIN_TAG.tag)
     }
 
     /*
-        Implementation AuthorizationTokenReceivedListener Interface
+        Implementation FragmentsListener Interface
      */
 
     override fun onAuthorizationTokenReceived(accessToken: AccessToken) {
@@ -100,8 +105,17 @@ class MainActivity : AppCompatActivity(),
             Log.d("DEBUG", "connexion effectuée")
             emptyBackStack()
             storeAccessToken(accessToken)
-            goToHomeFragment(accessToken)
+            goToHomeFragment(accessToken, true)
         }
+    }
+
+    override fun onImageUploaded() {
+        if (currentFrame != Frame.HOME)
+            stateReloadFrames[Frame.HOME.pos] = true
+        if (currentFrame != Frame.FAVORITES)
+            stateReloadFrames[Frame.FAVORITES.pos] = true
+        if (currentFrame != Frame.ADD)
+            reloadFrame()
     }
 
     private fun swapFragment(containerViewId: Int, fragment: Fragment, tag: String? = null) {
@@ -120,13 +134,19 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun removeAllFragment() {
-        var fragment : android.app.Fragment? = fragmentManager.findFragmentByTag(LOGIN_TAG)
+        var fragment : Fragment? = supportFragmentManager.findFragmentByTag(FragmentsTAG.LOGIN_TAG.tag)
 
         if (fragment != null)
-            fragmentManager.beginTransaction().remove(fragment).commit()
-        fragment = fragmentManager.findFragmentByTag(HOME_TAG)
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
+        fragment = supportFragmentManager.findFragmentByTag(FragmentsTAG.HOME_TAG.tag)
         if (fragment != null)
-            fragmentManager.beginTransaction().remove(fragment).commit()
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
+        fragment = supportFragmentManager.findFragmentByTag(FragmentsTAG.FAVORITES_TAG.tag)
+        if (fragment != null)
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
+        fragment = supportFragmentManager.findFragmentByTag(FragmentsTAG.ADD_TAG.tag)
+        if (fragment != null)
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
     }
 
     private fun emptyBackStack() {
@@ -164,14 +184,15 @@ class MainActivity : AppCompatActivity(),
         editor.apply()
     }
 
-    private fun reloadFrames() {
+    private fun reloadFrame() {
         val accessToken = extractAccessToken()
 
         if (accessToken != null) {
             when (currentFrame) {
-                Frame.LOGIN -> goToHomeFragment(accessToken)
-                Frame.FAVORITES -> goToHomeFragment(accessToken)
-                Frame.ADD -> goToHomeFragment(accessToken)
+                Frame.LOGIN -> goToHomeFragment(accessToken, true)
+                Frame.HOME -> goToHomeFragment(accessToken, true)
+                Frame.FAVORITES -> goToFavoritesFragment(accessToken, true)
+                Frame.ADD -> goToAddFragment(accessToken, true)
             }
         }
     }
@@ -180,42 +201,66 @@ class MainActivity : AppCompatActivity(),
         Log.d("DEBUG", "goToHome")
         val accessToken = extractAccessToken()
 
-        if (accessToken != null)
-            goToHomeFragment(accessToken)
+        if (accessToken != null) {
+            goToHomeFragment(accessToken, stateReloadFrames[Frame.HOME.pos])
+            stateReloadFrames[Frame.HOME.pos] = false
+        }
     }
 
     fun goToFavorites(menuItem: MenuItem) {
         Log.d("DEBUG", "goToFavorites")
         val accessToken = extractAccessToken()
 
-        if (accessToken != null)
-            goToFavoritesFragment(accessToken)
+        if (accessToken != null) {
+            goToFavoritesFragment(accessToken, stateReloadFrames[Frame.FAVORITES.pos])
+            stateReloadFrames[Frame.FAVORITES.pos] = false
+        }
     }
 
     fun goToAdd(menuItem: MenuItem) {
         Log.d("DEBUG", "goToAdd")
         val accessToken = extractAccessToken()
 
-        if (accessToken != null)
-            goToAddFragment(accessToken)
+        if (accessToken != null) {
+            goToAddFragment(accessToken, stateReloadFrames[Frame.ADD.pos])
+            stateReloadFrames[Frame.ADD.pos] = false
+        }
     }
 
-    private fun goToHomeFragment(accessToken: AccessToken) {
+    private fun goToHomeFragment(accessToken: AccessToken, new: Boolean) {
+        val fragment : Fragment? = supportFragmentManager.findFragmentByTag(FragmentsTAG.HOME_TAG.tag)
+
         currentFrame = Frame.HOME
         setBottomNavigationViewVisibility(View.VISIBLE)
-        swapFragment(R.id.core_container, getHomeFragment(accessToken), HOME_TAG)
+        if (fragment == null || new)
+            swapFragment(R.id.core_container, getHomeFragment(accessToken), FragmentsTAG.HOME_TAG.tag)
+        else
+            swapFragment(R.id.core_container, fragment, FragmentsTAG.HOME_TAG.tag)
     }
 
-    private fun goToFavoritesFragment(accessToken: AccessToken) {
+    /*
+    * Favorites Fragment is the HomeFragment with Type Favorite
+    * */
+    private fun goToFavoritesFragment(accessToken: AccessToken, new: Boolean) {
+        val fragment : Fragment? = supportFragmentManager.findFragmentByTag(FragmentsTAG.FAVORITES_TAG.tag)
+
         currentFrame = Frame.ADD
         setBottomNavigationViewVisibility(View.VISIBLE)
-        swapFragment(R.id.core_container, getAddFragment(accessToken), ADD_TAG)
+        if (fragment == null || new)
+            swapFragment(R.id.core_container, getFavoritesFragment(accessToken), FragmentsTAG.FAVORITES_TAG.tag)
+        else
+            swapFragment(R.id.core_container, fragment, FragmentsTAG.FAVORITES_TAG.tag)
     }
 
-    private fun goToAddFragment(accessToken: AccessToken) {
+    private fun goToAddFragment(accessToken: AccessToken, new: Boolean) {
+        val fragment : Fragment? = supportFragmentManager.findFragmentByTag(FragmentsTAG.ADD_TAG.tag)
+
         currentFrame = Frame.ADD
         setBottomNavigationViewVisibility(View.VISIBLE)
-        swapFragment(R.id.core_container, getAddFragment(accessToken), ADD_TAG)
+        if (fragment == null || new)
+            swapFragment(R.id.core_container, getAddFragment(accessToken), FragmentsTAG.ADD_TAG.tag)
+        else
+            swapFragment(R.id.core_container, fragment, FragmentsTAG.ADD_TAG.tag)
     }
 
     private fun getHomeFragment(accessToken: AccessToken) : HomeFragment {
@@ -224,8 +269,20 @@ class MainActivity : AppCompatActivity(),
         val bundle = Bundle()
 
         bundle.putString("accessToken", accessTokenJson)
+        bundle.putString("fragmentType", Gson().toJson(FragmentType.NORMAL))
         homeFragment.arguments = bundle
         return (homeFragment)
+    }
+
+    private fun getFavoritesFragment(accessToken: AccessToken) : HomeFragment {
+        val accessTokenJson : String = Gson().toJson(accessToken)
+        val favoritesFragment  = HomeFragment()
+        val bundle = Bundle()
+
+        bundle.putString("accessToken", accessTokenJson)
+        bundle.putString("fragmentType", Gson().toJson(FragmentType.FAVORITE))
+        favoritesFragment.arguments = bundle
+        return (favoritesFragment)
     }
 
     private fun getAddFragment(accessToken: AccessToken) : AddFragment {
@@ -269,7 +326,7 @@ class MainActivity : AppCompatActivity(),
             jsonObject = jsonTree.asJsonObject
             accessToken.parseJsonObject(jsonObject)
             storeAccessToken(accessToken)
-            reloadFrames()
+            reloadFrame()
         } else {
             Log.d("DEBUG", "json format error -> object expected")
         }
@@ -280,6 +337,10 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onImageUploadResponse(response: Response) {
+
+    }
+
+    override fun onImageUploadFail() {
 
     }
 }

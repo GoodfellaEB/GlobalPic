@@ -133,6 +133,7 @@ class ImgurRequests(handler: RequestHandler) {
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.d("DEBUG", "onFailure")
+                _handler.onImageUploadFail()
             }
         })
     }
@@ -168,7 +169,12 @@ class ImgurRequests(handler: RequestHandler) {
                 RequestHandler.Type.ACCOUNT_IMAGES -> _handler.onAccountImagesResponse(response)
                 RequestHandler.Type.IMAGE_UPLOAD -> _handler.onImageUploadResponse(response)
             }
-        } else
+        } else {
             Log.d("DEBUG", "body : " + response?.body()?.string())
+            when (dataRequest.request) {
+                RequestHandler.Type.IMAGE_UPLOAD -> _handler.onImageUploadFail()
+                else -> Log.d("DEBUG", "fail of " + dataRequest.request.name + " request")
+            }
+        }
     }
 }

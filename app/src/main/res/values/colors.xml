@@ -4,7 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="halfTransparentWhite">#99FFFFFF</color>
+    <color name="halfTransparentBlack">#BB000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+    <color name="red">#FFFF0000</color>
+    <color name="grey">#FF90A4AE</color>
 </resources>

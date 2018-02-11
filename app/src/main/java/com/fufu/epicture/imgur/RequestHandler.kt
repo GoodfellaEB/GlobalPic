@@ -15,4 +15,5 @@ interface RequestHandler {
     fun onRefreshTokenResponse(response: Response)
     fun onAccountImagesResponse(response: Response)
     fun onImageUploadResponse(response: Response)
+    fun onImageUploadFail()
 }

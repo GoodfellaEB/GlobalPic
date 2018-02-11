@@ -1,6 +1,7 @@
 package com.fufu.epicture.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,14 +14,20 @@ import android.view.ViewGroup
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.fufu.epicture.R
+import com.fufu.epicture.dataBase.FavoritesDBHandler
 import com.fufu.epicture.imgur.AccessToken
+import com.fufu.epicture.imgur.ImgurAppData
 import com.fufu.epicture.imgur.ImgurRequests
 import com.fufu.epicture.imgur.RequestHandler
+import com.fufu.epicture.listeners.FragmentsListener
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import okhttp3.Response
 import org.apache.commons.io.IOUtils
 import java.io.FileNotFoundException
 import java.io.InputStream
+import java.util.*
 
 /**
  * Created by weryp on 2/10/18.
@@ -28,11 +35,15 @@ import java.io.InputStream
 
 class AddFragment : Fragment(), RequestHandler {
 
+    private var dbHandler : FavoritesDBHandler? = null
+    private val favoritesQueue : Queue<Boolean> = LinkedList<Boolean>()
+
     private lateinit var addView : View
     private lateinit var  imageButton : ImageButton
     private lateinit var button : Button
     private lateinit var title : EditText
     private lateinit var description : EditText
+    private lateinit var favoriteCheckBox : CheckBox
     private var imageUri : Uri = Uri.parse("")
 
     private lateinit var imgurRequests : ImgurRequests
@@ -43,6 +54,12 @@ class AddFragment : Fragment(), RequestHandler {
         private const val PICK_IMAGE : Int = 1
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        if (context != null)
+            dbHandler = FavoritesDBHandler(context, ImgurAppData.DB_NAME)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -54,12 +71,13 @@ class AddFragment : Fragment(), RequestHandler {
         super.onActivityCreated(savedInstanceState)
         resolveAccessToken()
         imgurRequests = ImgurRequests(this)
-        imageButton = addView.findViewById<ImageButton>(R.id.add_image_button)
+        imageButton = addView.findViewById(R.id.add_image_button)
         imageButton.setOnClickListener({ onImageClick() })
-        button = addView.findViewById<Button>(R.id.add_submit_button)
+        button = addView.findViewById(R.id.add_submit_button)
         button.setOnClickListener({ onSubmitClick() })
-        title = addView.findViewById<EditText>(R.id.image_title)
-        description = addView.findViewById<EditText>(R.id.image_description)
+        title = addView.findViewById(R.id.image_title)
+        description = addView.findViewById(R.id.image_description)
+        favoriteCheckBox = addView.findViewById(R.id.favorite_check_box)
     }
 
     private fun resolveAccessToken() {
@@ -77,10 +95,12 @@ class AddFragment : Fragment(), RequestHandler {
 
         if (bytes != null && bytes.count() > 0) {
             toastMessage(activity?.getString(R.string.toast_image_submit))
+            favoritesQueue.add(favoriteCheckBox.isChecked)
             imgurRequests.imageUpload(bytes, title.text.toString(),
                     description.text.toString(), accessToken)
             title.text.clear()
             description.text.clear()
+            favoriteCheckBox.isChecked = false
         } else
             toastMessage(activity?.getString(R.string.toast_no_selected_image))
     }
@@ -126,6 +146,21 @@ class AddFragment : Fragment(), RequestHandler {
     }
 
     override fun onImageUploadResponse(response: Response) {
+        val jsonTree = JsonParser().parse(response.body()?.string())
+        val jsonObject : JsonObject
+
+        if (favoritesQueue.remove() && jsonTree.isJsonObject) {
+            jsonObject = jsonTree.asJsonObject.getAsJsonObject("data")
+            if (jsonObject.isJsonObject && jsonObject.get("id").isJsonNull.not()) {
+                dbHandler?.addFavorite(jsonObject.get("id").asString)
+            }
+        }
         toastMessage(activity?.getString(R.string.toast_image_uploaded))
+        if (activity is FragmentsListener)
+            (activity as FragmentsListener).onImageUploaded()
+    }
+
+    override fun onImageUploadFail() {
+        favoritesQueue.remove()
     }
 }

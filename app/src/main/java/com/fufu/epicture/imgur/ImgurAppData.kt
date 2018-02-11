@@ -12,5 +12,7 @@ class ImgurAppData {
         const val SECURITY : String = "oauth2"
 
         const val AUTHORIZE_REQUEST : String = "authorize"
+
+        const val DB_NAME : String = "favoritesDB"
     }
 }

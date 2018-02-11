@@ -14,9 +14,9 @@ import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
 import com.fufu.epicture.R
-import com.fufu.epicture.listeners.AuthorizationTokenReceivedListener
 import com.fufu.epicture.imgur.AccessToken
 import com.fufu.epicture.imgur.ImgurAppData
+import com.fufu.epicture.listeners.FragmentsListener
 
 
 /**
@@ -24,7 +24,7 @@ import com.fufu.epicture.imgur.ImgurAppData
  */
 class LoginFragment : Fragment() {
 
-    private lateinit var tokenListener : AuthorizationTokenReceivedListener
+    private lateinit var tokenListener : FragmentsListener
     private var loginWebView : WebView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,7 +44,7 @@ class LoginFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is AuthorizationTokenReceivedListener)
+        if (context is FragmentsListener)
             tokenListener = context
         else
             throw RuntimeException(context.toString()

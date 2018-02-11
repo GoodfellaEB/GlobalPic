@@ -1,5 +1,7 @@
 package com.fufu.epicture.display
 
+import android.graphics.Bitmap
+
 
 /**
  * Created by weryp on 2/8/18.

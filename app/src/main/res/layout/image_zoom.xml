@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/halfTransparentBlack">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/zoom_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:id="@+id/zoom_description"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="14sp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/zoom_image_constraint"
+                android:textColor="@color/white"
+                android:textStyle="italic"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/zoom_image_constraint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@color/black"
+                android:layout_below="@id/zoom_title">
+
+                <RelativeLayout
+                    android:id="@+id/image_zoom_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/image_zoom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:padding="0dp"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@mipmap/ic_launcher"
+                        android:background="@color/black"/>
+                </RelativeLayout>
+            </android.support.constraint.ConstraintLayout>
+
+            <CheckBox
+                android:id="@+id/zoom_checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/zoom_description"
+                android:layout_centerHorizontal="true"
+                android:text="@string/add_favorites"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/white"
+                android:textStyle="bold|italic"
+                android:buttonTint="@color/red" />
+        </RelativeLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>
