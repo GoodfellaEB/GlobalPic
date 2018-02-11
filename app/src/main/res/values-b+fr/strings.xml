@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Epicture</string>
+    <string name="background_description">starry sky</string>
+    <string name="login_button_string" tools:ignore="ButtonCase">Login to Imgur</string>
+    <string name="title_home">Accueil</string>
+    <string name="title_favorites">Favoris</string>
+    <string name="title_add">Ajouter</string>
+    <string name="title_select">Sélectionner</string>
+    <string name="image_title">Titre</string>
+    <string name="image_tags">Tags</string>
+    <string name="images_description">Description</string>
+    <string name="submit_button">Valider</string>
+    <string name="add_favorites">Ajouter aux favoris ?</string>
+    <string name="default_tag_letter">P</string>
+    <string name="add_details_placeholder">Description</string>
+    <string name="toast_image_uploaded">Image mise à jour</string>
+    <string name="toast_image_submit">Image envoyée</string>
+    <string name="toast_no_selected_image">Veuillez sélectionner une image</string>
+</resources>
