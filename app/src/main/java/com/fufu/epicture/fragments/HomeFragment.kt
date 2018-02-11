@@ -76,13 +76,20 @@ class HomeFragment : Fragment(), ImageLoadListener,
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.logout) {
-            if (activity is FragmentsListener)
+        when (item?.itemId) {
+            R.id.logout -> if (activity is FragmentsListener)
                 (activity as FragmentsListener).onLogout()
+            R.id.display_all -> adapter.setFilterType(ImageAdapter.FilterType.ALL)
+            R.id.with_title -> adapter.setFilterType(ImageAdapter.FilterType.WITH_TITLE)
+            R.id.with_description -> adapter.setFilterType(ImageAdapter.FilterType.WITH_DESCRIPTION)
         }
 
+            adapter.filter.filter("")
         return when (item?.itemId) {
             R.id.logout -> true
+            R.id.display_all -> true
+            R.id.with_title -> true
+            R.id.with_description -> true
             else -> super.onOptionsItemSelected(item)
         }
     }

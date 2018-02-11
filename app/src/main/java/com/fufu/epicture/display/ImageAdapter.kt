@@ -19,6 +19,12 @@ import com.google.gson.JsonSyntaxException
 class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<EpictureImage> = ArrayList())
     : ArrayAdapter<EpictureImage>(context, resource, pItems) {
 
+    enum class FilterType {
+        ALL,
+        WITH_TITLE,
+        WITH_DESCRIPTION
+    }
+
     private val _inflater : LayoutInflater
             = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val _resource = resource
@@ -80,12 +86,18 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
         customFilters.filter = filter
     }
 
+    fun setFilterType(filterType: FilterType) {
+        customFilters.filterType = filterType
+    }
+
     private class CustomsFilters {
         var listViewsToDisplay = ArrayList<String>()
         var filter = ""
+        var filterType = FilterType.ALL
 
         fun isEmpty() : Boolean {
-            return (listViewsToDisplay.isEmpty() && TextUtils.isEmpty(filter))
+            return (listViewsToDisplay.isEmpty() && TextUtils.isEmpty(filter)
+                    && filterType == FilterType.ALL)
         }
     }
 
@@ -109,6 +121,13 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
         }
 
         private fun viewNeedToBeDisplayed(epictureImage: EpictureImage) : Boolean {
+            Log.d("DEBUG", "type : " + customFilters.filterType.toString())
+            when (customFilters.filterType) {
+                FilterType.WITH_TITLE ->
+                    if (TextUtils.isEmpty(epictureImage.getTitle())) return (false)
+                FilterType.WITH_DESCRIPTION ->
+                    if (TextUtils.isEmpty(epictureImage.getDescription())) return (false)
+            }
             if (inListViewsToDisplay(epictureImage.getId()).not())
                 return (false)
             return (matchWithFilter(epictureImage))

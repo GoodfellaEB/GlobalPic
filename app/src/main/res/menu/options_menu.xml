@@ -7,7 +7,15 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
 
+    <item android:id="@+id/display_all"
+        android:title="@string/display_all_title" />
+
+    <item android:id="@+id/with_title"
+        android:title="@string/with_title_title" />
+
+    <item android:id="@+id/with_description"
+        android:title="@string/with_description_title" />
+
     <item android:id="@+id/logout"
-        android:title="@string/logout_title"
-        app:actionViewClass="android.widget.Button" />
+        android:title="@string/logout_title" />
 </menu>

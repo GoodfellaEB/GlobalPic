@@ -20,5 +20,8 @@
     <string name="toast_image_submit">Image submitted</string>
     <string name="toast_no_selected_image">Please select an image</string>
     <string name="search_title">search</string>
+    <string name="display_all_title">Display all</string>
+    <string name="with_title_title">With title</string>
+    <string name="with_description_title">With description</string>
     <string name="logout_title">Logout</string>
 </resources>
