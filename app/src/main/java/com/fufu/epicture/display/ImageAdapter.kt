@@ -121,7 +121,6 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
         }
 
         private fun viewNeedToBeDisplayed(epictureImage: EpictureImage) : Boolean {
-            Log.d("DEBUG", "type : " + customFilters.filterType.toString())
             when (customFilters.filterType) {
                 FilterType.WITH_TITLE ->
                     if (TextUtils.isEmpty(epictureImage.getTitle())) return (false)

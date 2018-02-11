@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.text.TextUtils
@@ -205,6 +206,7 @@ class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {
         Log.d("DEBUG", "goToHome")
         val accessToken = extractAccessToken()
 
+        setSelectedButtonBottomView(R.id.navigation_home)
         if (accessToken != null) {
             goToHomeFragment(accessToken, stateReloadFrames[Frame.HOME.pos])
             stateReloadFrames[Frame.HOME.pos] = false
@@ -215,6 +217,7 @@ class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {
         Log.d("DEBUG", "goToFavorites")
         val accessToken = extractAccessToken()
 
+        setSelectedButtonBottomView(R.id.navigation_favorites)
         if (accessToken != null) {
             goToFavoritesFragment(accessToken, stateReloadFrames[Frame.FAVORITES.pos])
             stateReloadFrames[Frame.FAVORITES.pos] = false
@@ -225,10 +228,18 @@ class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {
         Log.d("DEBUG", "goToAdd")
         val accessToken = extractAccessToken()
 
+        setSelectedButtonBottomView(R.id.navigation_add)
         if (accessToken != null) {
             goToAddFragment(accessToken, stateReloadFrames[Frame.ADD.pos])
             stateReloadFrames[Frame.ADD.pos] = false
         }
+    }
+
+    private fun setSelectedButtonBottomView(item: Int) {
+        val bottomView : BottomNavigationView = findViewById(R.id.navigation)
+        val menuItem : MenuItem = bottomView.menu.findItem(item)
+
+        menuItem.isChecked = true
     }
 
     private fun goToHomeFragment(accessToken: AccessToken, new: Boolean) {

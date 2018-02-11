@@ -16,7 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            app:itemIconTint="@drawable/bottom_view_selector"
+            app:itemTextColor="@drawable/bottom_view_selector"
             app:menu="@menu/navigation" />
+
 
     </RelativeLayout>
 
