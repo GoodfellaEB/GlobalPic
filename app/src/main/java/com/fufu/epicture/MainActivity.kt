@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.text.TextUtils
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.fufu.epicture.fragments.HomeFragment
@@ -55,9 +56,9 @@ class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.core_layout)
 
         imgurRequests = ImgurRequests(this)
-        setContentView(R.layout.core_layout)
         setBottomNavigationViewVisibility(View.GONE)
         tryImgurConnection()
         timer = Timer()

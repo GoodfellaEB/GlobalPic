@@ -5,9 +5,8 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.fufu.epicture.*
 import com.fufu.epicture.dataBase.FavoritesDBHandler
@@ -27,9 +26,11 @@ import org.w3c.dom.Text
  */
 
 class HomeFragment : Fragment(), ImageLoadListener,
-        RequestHandler, AdapterView.OnItemClickListener {
+        RequestHandler, AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
 
     private var fragmentType : FragmentType = FragmentType.NORMAL
+
+    private lateinit var searchView : SearchView
 
     private var handler : FavoritesDBHandler? = null
     private var favorites : ArrayList<String> = ArrayList()
@@ -61,6 +62,18 @@ class HomeFragment : Fragment(), ImageLoadListener,
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.options_menu, menu)
+        searchView = menu?.findItem(R.id.search)?.actionView as SearchView
+        searchView.setOnQueryTextListener(this)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         Log.d("DEBUG", "onCreateView")
@@ -86,6 +99,21 @@ class HomeFragment : Fragment(), ImageLoadListener,
         zoomImage.setOnClickListener({ onZoomButtonClick() })
 
         loadFavorites()
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        Log.d("DEBUG", "onQueryTextChange")
+        if (newText != null) {
+            adapter.setFilter(newText)
+            adapter.filter.filter("")
+        }
+        return (true)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        Log.d("DEBUG", "onQueryTextSubmit")
+        searchView.clearFocus()
+        return (true)
     }
 
     private fun loadFavorites() {

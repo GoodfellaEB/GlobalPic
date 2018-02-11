@@ -19,4 +19,5 @@
     <string name="toast_image_uploaded">Image Uploaded</string>
     <string name="toast_image_submit">Image submitted</string>
     <string name="toast_no_selected_image">Please select an image</string>
+    <string name="search_title">search</string>
 </resources>
