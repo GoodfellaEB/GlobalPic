@@ -1,8 +1,5 @@
-package com.fufu.epicture.imgur
+package com.fufu.globalpic.imgur
 
-/**
- * Created by weryp on 2/6/18.
- */
 class ImgurAppData {
     companion object {
         const val CLIENT_ID : String = "9eca150cb76b363"

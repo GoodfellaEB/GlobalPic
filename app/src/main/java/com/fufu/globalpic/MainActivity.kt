@@ -1,4 +1,4 @@
-package com.fufu.epicture
+package com.fufu.globalpic
 
 import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
@@ -11,20 +11,20 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import com.fufu.epicture.fragments.HomeFragment
-import com.fufu.epicture.imgur.AccessToken
-import com.fufu.epicture.imgur.ImgurRequests
-import com.fufu.epicture.imgur.RequestHandler
+import com.fufu.globalpic.fragments.HomeFragment
+import com.fufu.globalpic.imgur.AccessToken
+import com.fufu.globalpic.imgur.ImgurRequests
+import com.fufu.globalpic.imgur.RequestHandler
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import okhttp3.Response
 import java.util.*
-import com.fufu.epicture.fragments.AddFragment
-import com.fufu.epicture.fragments.FragmentType
-import com.fufu.epicture.fragments.LoginFragment
-import com.fufu.epicture.listeners.FragmentsListener
+import com.fufu.globalpic.fragments.AddFragment
+import com.fufu.globalpic.fragments.FragmentType
+import com.fufu.globalpic.fragments.LoginFragment
+import com.fufu.globalpic.listeners.FragmentsListener
 
 
 class MainActivity : AppCompatActivity(), FragmentsListener, RequestHandler {

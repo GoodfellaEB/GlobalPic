@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.fufu.epicture"
+        applicationId "com.fufu.globalpic"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
@@ -20,7 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = " epicture.apk"
+                    outputFileName = " globalpic.apk"
                 }
             }
         }
@@ -29,7 +29,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = " epicture.apk"
+                    outputFileName = " globalpic.apk"
                 }
             }
         }

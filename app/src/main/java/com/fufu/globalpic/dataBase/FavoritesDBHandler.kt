@@ -1,4 +1,4 @@
-package com.fufu.epicture.dataBase
+package com.fufu.globalpic.dataBase
 
 import android.content.ContentValues
 import android.content.Context
@@ -8,10 +8,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import android.view.View
-
-/**
- * Created by weryp on 2/10/18.
- */
 
 class FavoritesDBHandler constructor(context : Context, dbName : String, version : Int = 1)
     : SQLiteOpenHelper(context, dbName, null, version) {

@@ -1,4 +1,4 @@
-package com.fufu.epicture.display
+package com.fufu.globalpic.display
 
 import android.content.Context
 import android.text.TextUtils
@@ -8,16 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.bumptech.glide.Glide
-import com.fufu.epicture.R
+import com.fufu.globalpic.R
 import com.google.gson.JsonSyntaxException
 
-
-/**
- * Created by weryp on 2/8/18.
- */
-
-class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<EpictureImage> = ArrayList())
-    : ArrayAdapter<EpictureImage>(context, resource, pItems) {
+class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<GlobalPicImage> = ArrayList())
+    : ArrayAdapter<GlobalPicImage>(context, resource, pItems) {
 
     enum class FilterType {
         ALL,
@@ -35,7 +30,7 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
     private val imageFilter : ImageFilter = ImageFilter()
 
 
-    fun getCurrentImages() : ArrayList<EpictureImage> {
+    fun getCurrentImages() : ArrayList<GlobalPicImage> {
         return (imagesToDisplay)
     }
 
@@ -56,7 +51,7 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val gridView : GridView?
         var view = convertView
-        val epictureImage : EpictureImage = imagesToDisplay[position]
+        val globalpicImage : GlobalPicImage = imagesToDisplay[position]
 
         if (view == null) {
             view = _inflater.inflate(_resource, null, false)
@@ -67,14 +62,14 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
             }
         }
 
-        return (manageViewToDisplay(view, epictureImage))
+        return (manageViewToDisplay(view, globalpicImage))
     }
 
-    private fun manageViewToDisplay(view: View?, epictureImage: EpictureImage) : View {
+    private fun manageViewToDisplay(view: View?, globalpicImage: GlobalPicImage) : View {
         val imageView : ImageView? = view?.findViewById(R.id.image_view)
 
         if (view != null && imageView != null)
-            Glide.with(view).load(epictureImage.getLink()).into(imageView)
+            Glide.with(view).load(globalpicImage.getLink()).into(imageView)
         return (view as View)
     }
 
@@ -110,7 +105,7 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
                 results.values = images
                 results.count = images.size
             } else {
-                val filteredValues: ArrayList<EpictureImage> = ArrayList()
+                val filteredValues: ArrayList<GlobalPicImage> = ArrayList()
 
                 images.filterTo(filteredValues) { viewNeedToBeDisplayed(it) }
                 results.values = filteredValues
@@ -120,16 +115,16 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
             return (results)
         }
 
-        private fun viewNeedToBeDisplayed(epictureImage: EpictureImage) : Boolean {
+        private fun viewNeedToBeDisplayed(globalpicImage: GlobalPicImage) : Boolean {
             when (customFilters.filterType) {
                 FilterType.WITH_TITLE ->
-                    if (TextUtils.isEmpty(epictureImage.getTitle())) return (false)
+                    if (TextUtils.isEmpty(globalpicImage.getTitle())) return (false)
                 FilterType.WITH_DESCRIPTION ->
-                    if (TextUtils.isEmpty(epictureImage.getDescription())) return (false)
+                    if (TextUtils.isEmpty(globalpicImage.getDescription())) return (false)
             }
-            if (inListViewsToDisplay(epictureImage.getId()).not())
+            if (inListViewsToDisplay(globalpicImage.getId()).not())
                 return (false)
-            return (matchWithFilter(epictureImage))
+            return (matchWithFilter(globalpicImage))
         }
 
         private fun inListViewsToDisplay(name: String) : Boolean {
@@ -137,9 +132,9 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
             else (customFilters.listViewsToDisplay.isEmpty())
         }
 
-        private fun matchWithFilter(epictureImage: EpictureImage) : Boolean {
-            val id = epictureImage.getId()
-            val name : String = epictureImage.getTitle() ?: id
+        private fun matchWithFilter(globalpicImage: GlobalPicImage) : Boolean {
+            val id = globalpicImage.getId()
+            val name : String = globalpicImage.getTitle() ?: id
 
             return (name.toUpperCase().contains(customFilters.filter.toUpperCase()))
         }
@@ -147,7 +142,7 @@ class ImageAdapter(context : Context, resource : Int, pItems : ArrayList<Epictur
         @Suppress("UNCHECKED_CAST")
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             if (results?.values != null)
-                imagesToDisplay = results.values as ArrayList<EpictureImage>
+                imagesToDisplay = results.values as ArrayList<GlobalPicImage>
             notifyDataSetChanged()
         }
 

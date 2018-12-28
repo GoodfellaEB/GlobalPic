@@ -1,4 +1,4 @@
-package com.fufu.epicture.fragments
+package com.fufu.globalpic.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -13,15 +13,11 @@ import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
-import com.fufu.epicture.R
-import com.fufu.epicture.imgur.AccessToken
-import com.fufu.epicture.imgur.ImgurAppData
-import com.fufu.epicture.listeners.FragmentsListener
+import com.fufu.globalpic.R
+import com.fufu.globalpic.imgur.AccessToken
+import com.fufu.globalpic.imgur.ImgurAppData
+import com.fufu.globalpic.listeners.FragmentsListener
 
-
-/**
- * Created by weryp on 2/6/18.
- */
 class LoginFragment : Fragment() {
 
     private lateinit var tokenListener : FragmentsListener

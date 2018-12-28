@@ -1,9 +1,9 @@
-package com.fufu.epicture
+package com.fufu.globalpic
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.fufu.epicture.display.EpictureImage
-import com.fufu.epicture.display.ImageAdapter
+import com.fufu.globalpic.display.GlobalPicImage
+import com.fufu.globalpic.display.ImageAdapter
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,10 +28,10 @@ class AdapterTest {
         val activity : MainActivity = activityRule.activity
         activity.runOnUiThread({
             val adapter = ImageAdapter(activity, R.layout.grid_view_item)
-            val epictureImage : EpictureImage = EpictureImage("chien", "", null , null)
+            val globalpicImage : GlobalPicImage = GlobalPicImage("chien", "", null , null)
 
             Assert.assertEquals(0, adapter.count)
-            adapter.add(epictureImage)
+            adapter.add(globalpicImage)
             Assert.assertEquals(1, adapter.count)
         })
     }
@@ -41,10 +41,10 @@ class AdapterTest {
         val activity : MainActivity = activityRule.activity
         activity.runOnUiThread({
             val adapter = ImageAdapter(activity, R.layout.grid_view_item)
-            val one : EpictureImage = EpictureImage("chien", "", null , null)
-            val two : EpictureImage = EpictureImage("chat", "", null , null)
-            val three : EpictureImage = EpictureImage("lapin", "", null , null)
-            val four : EpictureImage = EpictureImage("souris", "", null , null)
+            val one : GlobalPicImage = GlobalPicImage("chien", "", null , null)
+            val two : GlobalPicImage = GlobalPicImage("chat", "", null , null)
+            val three : GlobalPicImage = GlobalPicImage("lapin", "", null , null)
+            val four : GlobalPicImage = GlobalPicImage("souris", "", null , null)
             val favorites : ArrayList<String> = ArrayList()
 
             adapter.add(one)
@@ -67,10 +67,10 @@ class AdapterTest {
         val activity : MainActivity = activityRule.activity
         activity.runOnUiThread({
             val adapter = ImageAdapter(activity, R.layout.grid_view_item)
-            val one : EpictureImage = EpictureImage("chien", "", null , null)
-            val two : EpictureImage = EpictureImage("chat", "", null , null)
-            val three : EpictureImage = EpictureImage("lapin", "", null , null)
-            val four : EpictureImage = EpictureImage("souris", "", null , null)
+            val one : GlobalPicImage = GlobalPicImage("chien", "", null , null)
+            val two : GlobalPicImage = GlobalPicImage("chat", "", null , null)
+            val three : GlobalPicImage = GlobalPicImage("lapin", "", null , null)
+            val four : GlobalPicImage = GlobalPicImage("souris", "", null , null)
 
             adapter.add(one)
             adapter.add(two)
@@ -93,10 +93,10 @@ class AdapterTest {
         val activity : MainActivity = activityRule.activity
         activity.runOnUiThread({
             val adapter = ImageAdapter(activity, R.layout.grid_view_item)
-            val one : EpictureImage = EpictureImage("chien", "", null , null)
-            val two : EpictureImage = EpictureImage("chat", "", null , null)
-            val three : EpictureImage = EpictureImage("lapin", "", null , null)
-            val four : EpictureImage = EpictureImage("souris", "", null , null)
+            val one : GlobalPicImage = GlobalPicImage("chien", "", null , null)
+            val two : GlobalPicImage = GlobalPicImage("chat", "", null , null)
+            val three : GlobalPicImage = GlobalPicImage("lapin", "", null , null)
+            val four : GlobalPicImage = GlobalPicImage("souris", "", null , null)
 
             adapter.add(one)
             adapter.add(two)
@@ -107,8 +107,8 @@ class AdapterTest {
             adapter.filter.filter("", {
                 Assert.assertEquals(0, adapter.count)
 
-                val five : EpictureImage = EpictureImage("cheval", "", "Petit cheval" , null)
-                val six : EpictureImage = EpictureImage("mouton", "", "Grand mouton" , null)
+                val five : GlobalPicImage = GlobalPicImage("cheval", "", "Petit cheval" , null)
+                val six : GlobalPicImage = GlobalPicImage("mouton", "", "Grand mouton" , null)
 
                 adapter.add(five)
                 adapter.add(six)
@@ -124,10 +124,10 @@ class AdapterTest {
         val activity : MainActivity = activityRule.activity
         activity.runOnUiThread({
             val adapter = ImageAdapter(activity, R.layout.grid_view_item)
-            val one : EpictureImage = EpictureImage("chien", "", null , null)
-            val two : EpictureImage = EpictureImage("chat", "", null , null)
-            val three : EpictureImage = EpictureImage("lapin", "", null , null)
-            val four : EpictureImage = EpictureImage("souris", "", null , null)
+            val one : GlobalPicImage = GlobalPicImage("chien", "", null , null)
+            val two : GlobalPicImage = GlobalPicImage("chat", "", null , null)
+            val three : GlobalPicImage = GlobalPicImage("lapin", "", null , null)
+            val four : GlobalPicImage = GlobalPicImage("souris", "", null , null)
 
             adapter.add(one)
             adapter.add(two)
@@ -138,11 +138,11 @@ class AdapterTest {
             adapter.filter.filter("", {
                 Assert.assertEquals(0, adapter.count)
 
-                val five : EpictureImage = EpictureImage("cheval", "", null ,
+                val five : GlobalPicImage = GlobalPicImage("cheval", "", null ,
                         "Le cheval marche dans la plaine")
-                val six : EpictureImage = EpictureImage("mouton", "", null ,
+                val six : GlobalPicImage = GlobalPicImage("mouton", "", null ,
                         "Le mouton à l'air bien chaud et doux")
-                val seven : EpictureImage = EpictureImage("lama", "", null ,
+                val seven : GlobalPicImage = GlobalPicImage("lama", "", null ,
                         "Attention il crache !")
 
                 adapter.add(five)

@@ -1,4 +1,4 @@
-package com.fufu.epicture.fragments
+package com.fufu.globalpic.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -7,22 +7,18 @@ import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
 import android.widget.*
-import com.fufu.epicture.*
-import com.fufu.epicture.dataBase.FavoritesDBHandler
-import com.fufu.epicture.display.EpictureImage
-import com.fufu.epicture.display.ImageAdapter
-import com.fufu.epicture.imgur.AccessToken
-import com.fufu.epicture.imgur.ImgurAppData
-import com.fufu.epicture.imgur.ImgurRequests
-import com.fufu.epicture.imgur.RequestHandler
-import com.fufu.epicture.listeners.FragmentsListener
-import com.fufu.epicture.listeners.ImageLoadListener
+import com.fufu.globalpic.*
+import com.fufu.globalpic.dataBase.FavoritesDBHandler
+import com.fufu.globalpic.display.GlobalPicImage
+import com.fufu.globalpic.display.ImageAdapter
+import com.fufu.globalpic.imgur.AccessToken
+import com.fufu.globalpic.imgur.ImgurAppData
+import com.fufu.globalpic.imgur.ImgurRequests
+import com.fufu.globalpic.imgur.RequestHandler
+import com.fufu.globalpic.listeners.FragmentsListener
+import com.fufu.globalpic.listeners.ImageLoadListener
 import com.google.gson.*
 import okhttp3.Response
-
-/**
- * Created by weryp on 2/8/18.
- */
 
 class HomeFragment : Fragment(), ImageLoadListener,
         RequestHandler, AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
@@ -215,7 +211,7 @@ class HomeFragment : Fragment(), ImageLoadListener,
         val description : String = if (imageDescription.isJsonNull) "" else imageDescription.asString
 
         if (isNewImage(imageId, imageUrl)) {
-            adapter.add(EpictureImage(imageId.asString, imageUrl.asString, title, description))
+            adapter.add(GlobalPicImage(imageId.asString, imageUrl.asString, title, description))
             adapter.notifyDataSetChanged()
             reloadFilters()
         }
@@ -236,14 +232,14 @@ class HomeFragment : Fragment(), ImageLoadListener,
     }
 
     private fun onZoomButtonClick() {
-        val epictureImage = adapter.getCurrentImages()[itemZoomed]
+        val globalpicImage = adapter.getCurrentImages()[itemZoomed]
 
         zoomView.visibility = View.GONE
-        if (isFavorite(epictureImage) != zoomCheckBox.isChecked) {
+        if (isFavorite(globalpicImage) != zoomCheckBox.isChecked) {
             if (zoomCheckBox.isChecked)
-                handler?.addFavorite(epictureImage.getId())
+                handler?.addFavorite(globalpicImage.getId())
             else
-                handler?.deleteFavorite(epictureImage.getId())
+                handler?.deleteFavorite(globalpicImage.getId())
             loadFavorites()
         }
         zoomCheckBox.isChecked = false
@@ -252,17 +248,17 @@ class HomeFragment : Fragment(), ImageLoadListener,
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val layout = gridView.getChildAt(position - gridView.firstVisiblePosition)
         val imageView : ImageView = layout.findViewById(R.id.image_view)
-        val epictureImage = adapter.getCurrentImages()[position]
+        val globalpicImage = adapter.getCurrentImages()[position]
 
         resizeZoomImage()
         zoomView.visibility = View.VISIBLE
         zoomImage.setImageDrawable(imageView.drawable)
-        zoomTitle.text = if (epictureImage.getTitle() != null)
-            epictureImage.getTitle() else ""
-        zoomDescription.text = if (epictureImage.getDescription() != null)
-            epictureImage.getDescription() else ""
+        zoomTitle.text = if (globalpicImage.getTitle() != null)
+            globalpicImage.getTitle() else ""
+        zoomDescription.text = if (globalpicImage.getDescription() != null)
+            globalpicImage.getDescription() else ""
         itemZoomed = position
-        zoomCheckBox.isChecked = isFavorite(epictureImage)
+        zoomCheckBox.isChecked = isFavorite(globalpicImage)
     }
 
     private fun resizeZoomImage() {
@@ -274,8 +270,8 @@ class HomeFragment : Fragment(), ImageLoadListener,
         zoomImageLayout.requestLayout()
     }
 
-    private fun isFavorite(epictureImage: EpictureImage) : Boolean {
-        return if (favorites.any { it == epictureImage.getId() }) (true) else (false)
+    private fun isFavorite(globalpicImage: GlobalPicImage) : Boolean {
+        return if (favorites.any { it == globalpicImage.getId() }) (true) else (false)
     }
 
     private fun reloadFilters() {

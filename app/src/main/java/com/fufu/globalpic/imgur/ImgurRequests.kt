@@ -1,11 +1,11 @@
-package com.fufu.epicture.imgur
+package com.fufu.globalpic.imgur
 
 import android.net.Uri
 import android.os.AsyncTask
 import android.support.v4.app.Fragment
 import android.util.Base64
 import android.util.Log
-import com.fufu.epicture.MainActivity
+import com.fufu.globalpic.MainActivity
 import com.google.gson.JsonObject
 import okhttp3.*
 import java.io.IOException
@@ -13,11 +13,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-
-
-/**
- * Created by weryp on 2/8/18.
- */
 class ImgurRequests(handler: RequestHandler) {
 
     private val _handler = handler

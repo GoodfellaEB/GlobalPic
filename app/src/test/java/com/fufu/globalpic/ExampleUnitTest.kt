@@ -1,4 +1,4 @@
-package com.fufu.epicture
+package com.fufu.globalpic
 
 import org.junit.Test
 

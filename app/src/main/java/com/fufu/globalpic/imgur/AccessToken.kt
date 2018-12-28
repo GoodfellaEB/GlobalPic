@@ -1,12 +1,9 @@
-package com.fufu.epicture.imgur
+package com.fufu.globalpic.imgur
 
 import android.net.Uri
 import com.google.gson.JsonObject
 import java.util.*
 
-/**
- * Created by weryp on 2/7/18.
- */
 class AccessToken (fragment: String) {
 
     companion object {

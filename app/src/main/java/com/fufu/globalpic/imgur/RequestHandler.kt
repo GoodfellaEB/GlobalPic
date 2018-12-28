@@ -1,10 +1,7 @@
-package com.fufu.epicture.imgur
+package com.fufu.globalpic.imgur
 
 import okhttp3.Response
 
-/**
- * Created by weryp on 2/9/18.
- */
 interface RequestHandler {
     enum class Type {
         TOKEN_REFRESH,

@@ -1,13 +1,8 @@
-package com.fufu.epicture.display
+package com.fufu.globalpic.display
 
 import android.graphics.Bitmap
 
-
-/**
- * Created by weryp on 2/8/18.
- */
-
-class EpictureImage(id: String, link: String, title: String?, description: String?) {
+class GlobalPicImage(id: String, link: String, title: String?, description: String?) {
     private val _id = id
     private val _title = title
     private val _description = description

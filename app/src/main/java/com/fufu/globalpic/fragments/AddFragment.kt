@@ -1,4 +1,4 @@
-package com.fufu.epicture.fragments
+package com.fufu.globalpic.fragments
 
 import android.app.Activity
 import android.content.Context
@@ -11,13 +11,13 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import com.bumptech.glide.Glide
-import com.fufu.epicture.R
-import com.fufu.epicture.dataBase.FavoritesDBHandler
-import com.fufu.epicture.imgur.AccessToken
-import com.fufu.epicture.imgur.ImgurAppData
-import com.fufu.epicture.imgur.ImgurRequests
-import com.fufu.epicture.imgur.RequestHandler
-import com.fufu.epicture.listeners.FragmentsListener
+import com.fufu.globalpic.R
+import com.fufu.globalpic.dataBase.FavoritesDBHandler
+import com.fufu.globalpic.imgur.AccessToken
+import com.fufu.globalpic.imgur.ImgurAppData
+import com.fufu.globalpic.imgur.ImgurRequests
+import com.fufu.globalpic.imgur.RequestHandler
+import com.fufu.globalpic.listeners.FragmentsListener
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -27,9 +27,6 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 import java.util.*
 
-/**
- * Created by weryp on 2/10/18.
- */
 
 class AddFragment : Fragment(), RequestHandler {
 
