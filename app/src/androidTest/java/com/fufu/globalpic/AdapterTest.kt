@@ -11,11 +11,6 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.UiThreadTestRule
 import org.junit.Rule
 
-
-/**
- * Created by weryp on 2/11/18.
- */
-
 @RunWith(AndroidJUnit4::class)
 class AdapterTest {
 
